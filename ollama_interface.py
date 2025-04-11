@@ -3,27 +3,27 @@ import subprocess
 import json
 import streamlit as st
 import re
+import requests
+
 
 def query_ollama(prompt, model="llama3"):
     try:
-        print("[DEBUG] Sending prompt to Ollama...")
         st.info("Sending prompt to Ollama...")
-        result = subprocess.run(
-            ["ollama", "run", model],
-            input=prompt.encode(),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            timeout=60
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={
+                "model": model,
+                "prompt": prompt,
+                "stream": False,
+                "format": "json"
+            },
+            timeout=300
         )
-        output = result.stdout.decode()
-        print("[DEBUG] Received response from Ollama.")
-        st.success("Received response from Ollama.")
-        return output
+        response.raise_for_status()
+        return response.json()["response"]
     except Exception as e:
-        error_msg = f"[ERROR] Ollama invocation failed: {e}"
-        print(error_msg)
-        st.error(error_msg)
-        return json.dumps({"name": "Unknown", "score": 0, "reasoning": f"LLM error: {str(e)}"})
+        st.error(f"Ollama API Error: {str(e)}")
+        return json.dumps({"error": str(e)})
 
 def match_resumes_to_jobs(jobs, resumes):
     matches = {}
