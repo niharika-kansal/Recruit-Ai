@@ -2,7 +2,7 @@
 
 > Match the best candidates to your job descriptions using Ollama and Streamlit — powered by LLM magic ✨
 
-![demo](https://media.giphy.com/media/l4FGGafcOHmrlQxG0/giphy.gif)
+!(https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZm5tZmRpNmZmZ2hjb2c5cGFxNjUyajBrcGxhODcxeXA1dWE2Z3FnZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/emHFjFhg9Ha0wQjihU/giphy.gif)
 
 ---
 
