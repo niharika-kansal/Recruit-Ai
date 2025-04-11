@@ -1,4 +1,4 @@
-# 💼 AI Resume Matcher Dashboard
+# 💼 Recruit AI
 
 > Match the best candidates to your job descriptions using Ollama and Streamlit — powered by LLM magic ✨
 
