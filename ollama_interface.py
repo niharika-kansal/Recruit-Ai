@@ -6,24 +6,34 @@ import re
 import requests
 
 
-def query_ollama(prompt, model="llama3"):
+OLLAMA_API = "https://6b74-117-203-246-41.ngrok-free.app" 
+
+def query_ollama(prompt, model="phi3"):
     try:
-        st.info("Sending prompt to Ollama...")
+        st.info("Querying remote Ollama...")
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            f"{OLLAMA_API}/api/generate",
             json={
                 "model": model,
                 "prompt": prompt,
-                "stream": False,
-                "format": "json"
+                "stream": False
             },
-            timeout=300
+            timeout=60
         )
         response.raise_for_status()
-        return response.json()["response"]
+        raw = response.json().get("response", "")
+        match = re.search(r'\{.*?\}', raw, re.DOTALL)
+        if not match:
+            raise ValueError("No valid JSON found in response.")
+        return match.group(0)
+
     except Exception as e:
-        st.error(f"Ollama API Error: {str(e)}")
-        return json.dumps({"error": str(e)})
+        st.error(f"Failed to query remote Ollama: {e}")
+        return json.dumps({
+            "name": "Unknown",
+            "score": 0,
+            "reasoning": f"Ollama error: {str(e)}"
+        })
 
 def match_resumes_to_jobs(jobs, resumes):
     matches = {}
