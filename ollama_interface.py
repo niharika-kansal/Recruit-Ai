@@ -13,6 +13,7 @@ def query_ollama(prompt, model="phi3"):
         st.info("Querying remote Ollama...")
         response = requests.post(
             f"{OLLAMA_API}/api/generate",
+            headers={ "ngrok-skip-browser-warning": "true" },
             json={
                 "model": model,
                 "prompt": prompt,
@@ -26,6 +27,15 @@ def query_ollama(prompt, model="phi3"):
         if not match:
             raise ValueError("No valid JSON found in response.")
         return match.group(0)
+
+    except Exception as e:
+        st.error(f"Failed to query remote Ollama: {e}")
+        return json.dumps({
+            "name": "Unknown",
+            "score": 0,
+            "reasoning": f"Ollama error: {str(e)}"
+        })
+
 
     except Exception as e:
         st.error(f"Failed to query remote Ollama: {e}")
